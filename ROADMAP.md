@@ -11,16 +11,19 @@
 * **Integration:** အသုံးပြုမယ့် Base LLM (သို့မဟုတ် OpenClaw လို ကိုယ်ပိုင် Agent) ကို API ကနေတဆင့် ချိတ်ဆက်ပါ။
 * **Automated Workflow:** မူရင်းစာသား အသစ်ရောက်လာတိုင်း AI ဆီပို့ပြီး အကြမ်းဖျင်း ဘာသာပြန်ပါ။ ရလာတဲ့ ရလဒ်ကို Database ထဲမှာ `ai_translated` status နဲ့ သိမ်းဆည်းပါ။
 
-## Phase 3: Editor UI & Crowdsourced Review (လူကိုယ်တိုင် စစ်ဆေးပြင်ဆင်ခြင်း)
-* **Workspace Development:** Next.js နဲ့ TypeScript ကို သုံးပြီး Translator တွေ၊ Editor တွေ အလွယ်တကူ ဝင်ရောက်ပြင်ဆင်နိုင်မယ့် UI ကို တည်ဆောက်ပါ။ ဘယ်ဘက်မှာ မူရင်းစာ၊ ညာဘက်မှာ AI ဘာသာပြန်ထားတာကို ပြသပြီး Edit လုပ်ခွင့်ပေးထားပါ။
-* **Version Control:** လူကိုယ်တိုင် ပြင်ဆင်ပြီးသွားရင် `human_edited` အနေနဲ့ Version အသစ်တစ်ခု ခွဲသိမ်းပါ။ မူလ AI ရေးထားတာကို ဖျက်မပစ်ပါနဲ့ (နောက်ပိုင်း Compare လုပ်ပြီး Loss function တွက်ဖို့ လိုလာနိုင်ပါတယ်)။
-* **Popularity Metrics:** ဖတ်ရှုသူတွေဆီက Feedback ကောက်ပါ။ "လူကြိုက်များတဲ့ လူတည်းဖြတ်ထားတာ" ကို ခွဲခြားနိုင်ဖို့ Chapter တစ်ခုချင်းစီရဲ့ View count, User Rating, ဒါမှမဟုတ် Editor ရဲ့ ယုံကြည်ရမှု အဆင့် (Trust Score) တွေကို တွက်ချက်ပါ။
+## Phase 3: Editor UI & Reader Portal (လူကိုယ်တိုင် စစ်ဆေးခြင်း နှင့် စာဖတ်သူများအတွက်)
+* **Editor Dashboard (`/dashboard`):** Translator တွေ၊ Editor တွေ အလွယ်တကူ ဝင်ရောက်ပြင်ဆင်နိုင်မယ့် UI။ ဘယ်ဘက်မှာ မူရင်းစာ၊ ညာဘက်မှာ AI ဘာသာပြန်ထားတာကို ပြသပြီး Edit လုပ်ခွင့်ပေးထားပါ။
+* **Reader Portal (`/` & `/read`):** စာဖတ်သူများအတွက် သီးသန့် Interface။
+    * **Home (`/`):** ဝတ္ထုများ စာရင်း (Novel List)။
+    * **Reader View (`/read/:id`):** စာဖတ်ရန် သန့်ရှင်းသော UI (No Edit Controls)။
+* **Version Control:** လူကိုယ်တိုင် ပြင်ဆင်ပြီးသွားရင် `human_edited` အနေနဲ့ Version အသစ်တစ်ခု ခွဲသိမ်းပါ။
+* **Popularity Metrics:** ဖတ်ရှုသူတွေဆီက Feedback ကောက်ပါ။ Chapter တစ်ခုချင်းစီရဲ့ View count, User Rating (Reviews) ကို သိမ်းဆည်းပါ။
 
 ## Phase 4: Data Extraction Pipeline (JSON Data ထုတ်ယူခြင်း)
 * **Filtering Algorithm:** Drizzle သုံးပြီး Database ထဲကနေ Rating အမြင့်ဆုံး (သို့) သတ်မှတ်ထားတဲ့ Quality Standard နဲ့ ကိုက်ညီတဲ့ `human_edited` စာသားတွေကိုပဲ ရွေးထုတ်မယ့် Query ရေးပါ။
 * **Formatting:** ရွေးထုတ်လိုက်တဲ့ Data တွေကို Fine-tuning လုပ်ဖို့ အသင့်ဖြစ်မယ့် Source-Target Pair တွေအဖြစ် ပြောင်းလဲပါ။
     * ဥပမာ Format (JSONL): `{"messages": [{"role": "user", "content": "မူရင်းစာသား"}, {"role": "assistant", "content": "လူတည်းဖြတ်ထားသည့် အရည်အသွေးမြင့် စာသား"}]}`
-* **Cron Jobs:** တစ်ပတ်တစ်ခါ (သို့) တစ်လတစ်ခါ ဒီ Script ကို အလိုအလျောက် run ပြီး JSON data တွေ ထုတ်ပေးမယ့် စနစ် (Cron Job / Cloudflare Workers) လုပ်ထားပါ။
+* **Cron Jobs:** တစ်ပတ်တစ်ခါ (သို့) တစ်လတစ်ခါ ဒီ Script ကို အလိုအလျောက် run ပြီး JSON data တွေ ထုတ်ပေးမယ့် စနစ်။
 
 ## Phase 5: AI Fine-Tuning & Feedback Loop (AI ကို ပြန်လည်သင်ကြားပေးခြင်း)
 * **Model Training:** ထုတ်ယူရရှိလာတဲ့ JSON data တွေကို အသုံးပြုပြီး Google Cloud လို Platform မျိုးမှာ AI Model ကို Fine-tune လုပ်ပါ။
