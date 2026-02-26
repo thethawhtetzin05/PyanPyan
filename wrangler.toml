@@ -1,0 +1,15 @@
+name = "atw"
+compatibility_date = "2024-04-05"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "atw-db"
+database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Replace with your D1 database ID in Cloudflare
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "atw-assets"
+
+# Vars for secrets (API Keys)
+[vars]
+GEMINI_API_KEY = "" # Set this in Cloudflare Dashboard
