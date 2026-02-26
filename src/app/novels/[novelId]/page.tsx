@@ -5,14 +5,15 @@ import { eq, asc } from "drizzle-orm";
 
 export const dynamic = 'force-dynamic';
 
-export default async function NovelPage({ params }: { params: { novelId: string } }) {
-  const novel = await db.select().from(novels).where(eq(novels.id, params.novelId)).get();
+export default async function NovelPage({ params }: { params: Promise<{ novelId: string }> }) {
+  const { novelId } = await params;
+  const novel = await db.select().from(novels).where(eq(novels.id, novelId)).get();
   
   if (!novel) return <div className="p-8 text-center text-red-500">Novel Not Found</div>;
 
   const novelChapters = await db.select()
     .from(chapters)
-    .where(eq(chapters.novelId, params.novelId))
+    .where(eq(chapters.novelId, novelId))
     .orderBy(asc(chapters.order))
     .all();
 

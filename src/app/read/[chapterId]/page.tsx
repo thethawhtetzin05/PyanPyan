@@ -6,8 +6,9 @@ import { submitReview } from "@/app/actions"; // Server Action
 
 export const dynamic = 'force-dynamic';
 
-export default async function ChapterPage({ params }: { params: { chapterId: string } }) {
-  const chapter = await db.select().from(chapters).where(eq(chapters.id, params.chapterId)).get();
+export default async function ChapterPage({ params }: { params: Promise<{ chapterId: string }> }) {
+  const { chapterId } = await params;
+  const chapter = await db.select().from(chapters).where(eq(chapters.id, chapterId)).get();
   
   if (!chapter) return <div className="p-8 text-center text-red-500">Chapter Not Found</div>;
 
@@ -31,7 +32,7 @@ export default async function ChapterPage({ params }: { params: { chapterId: str
   // Fetch Reviews
   const chapterReviews = await db.select()
     .from(reviews)
-    .where(eq(reviews.chapterId, params.chapterId))
+    .where(eq(reviews.chapterId, chapterId))
     .orderBy(desc(reviews.createdAt))
     .all();
 
@@ -99,7 +100,7 @@ export default async function ChapterPage({ params }: { params: { chapterId: str
                 const comment = formData.get("comment") as string;
                 const rating = parseInt(formData.get("rating") as string);
                 if (comment && rating) {
-                    await submitReview(params.chapterId, rating, comment);
+                    await submitReview(chapterId, rating, comment);
                 }
             }} className="mb-10 bg-gray-50 p-6 rounded-lg border border-gray-200">
                 <div className="mb-4">

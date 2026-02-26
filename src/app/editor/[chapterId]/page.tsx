@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { getChapter, saveDraft, markAsReviewed, triggerAiTranslation } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,7 +14,8 @@ interface Chapter {
   status: string;
 }
 
-export default function EditorPage({ params }: { params: { chapterId: string } }) {
+export default function EditorPage({ params }: { params: Promise<{ chapterId: string }> }) {
+  const { chapterId } = use(params);
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [editedContent, setEditedContent] = useState("");
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ export default function EditorPage({ params }: { params: { chapterId: string } }
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await getChapter(params.chapterId);
+        const data = await getChapter(chapterId);
         if (data) {
           setChapter(data as any); // Type assertion for now due to drizzle result type
           // If already edited, use that, otherwise use AI translation
@@ -41,7 +42,7 @@ export default function EditorPage({ params }: { params: { chapterId: string } }
       }
     }
     loadData();
-  }, [params.chapterId]);
+  }, [chapterId]);
 
   const handleSave = async () => {
     if (!chapter) return;
