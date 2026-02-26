@@ -4,6 +4,7 @@ import { chapters, novels } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 
 export const dynamic = 'force-dynamic';
+export const runtime = "edge";
 
 export default async function HomePage() {
   const allNovels = await db.select().from(novels).all();

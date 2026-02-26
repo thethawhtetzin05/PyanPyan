@@ -5,6 +5,7 @@ import { eq, asc, gt, lt, desc } from "drizzle-orm";
 import { submitReview } from "@/app/actions"; // Server Action
 
 export const dynamic = 'force-dynamic';
+export const runtime = "edge";
 
 export default async function ChapterPage({ params }: { params: Promise<{ chapterId: string }> }) {
   const { chapterId } = await params;
