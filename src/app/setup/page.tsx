@@ -26,8 +26,8 @@ export default function SetupPage() {
 
   return (
     <div className="p-10 font-sans">
-      <h1 className="text-2xl font-bold mb-4">Database Setup</h1>
-      <p className="mb-4">Click below to create the necessary tables in D1.</p>
+      <h1 className="text-2xl font-bold mb-4">Database Setup (v2 - Robust)</h1>
+      <p className="mb-4">Click below to create the necessary tables in D1 (Simplified).</p>
       
       <button 
         onClick={handleRun}
