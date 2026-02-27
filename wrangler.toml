@@ -7,9 +7,9 @@ binding = "DB"
 database_name = "atw-db"
 database_id = "6c3c472a-40ff-493d-b598-ff3c3664f4b3" # Replace with your D1 database ID in Cloudflare
 
-[[r2_buckets]]
-binding = "R2"
-bucket_name = "atw-assets"
+# [[r2_buckets]]
+# binding = "R2"
+# bucket_name = "atw-assets"
 
 # Vars for secrets (API Keys)
 [vars]
