@@ -117,12 +117,75 @@ export async function submitReview(chapterId: string, rating: number, comment: s
   }
 }
 
-// Get Reviews
-export async function getReviews(chapterId: string) {
-    const results = await db.select()
-        .from(reviews)
-        .where(eq(reviews.chapterId, chapterId))
-        .orderBy(desc(reviews.createdAt))
-        .all();
-    return results;
+import { sql } from "drizzle-orm";
+
+// ... existing imports ...
+
+// Manual Migration for Setup Page
+export async function runMigration() {
+  try {
+    // 1. Create Tables
+    await db.run(sql`CREATE TABLE IF NOT EXISTS novels (
+      id TEXT PRIMARY KEY NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      original_language TEXT NOT NULL,
+      status TEXT DEFAULT 'ongoing' NOT NULL,
+      cover_url TEXT,
+      author TEXT,
+      created_at INTEGER DEFAULT (strftime('%s', 'now'))
+    );`);
+
+    await db.run(sql`CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY NOT NULL,
+      email TEXT NOT NULL,
+      role TEXT DEFAULT 'reader' NOT NULL,
+      trust_score INTEGER DEFAULT 0,
+      created_at INTEGER DEFAULT (strftime('%s', 'now'))
+    );`);
+
+    await db.run(sql`CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (email);`);
+
+    await db.run(sql`CREATE TABLE IF NOT EXISTS chapters (
+      id TEXT PRIMARY KEY NOT NULL,
+      novel_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      content_original TEXT NOT NULL,
+      content_translated TEXT,
+      content_edited TEXT,
+      status TEXT DEFAULT 'pending' NOT NULL,
+      order INTEGER NOT NULL,
+      view_count INTEGER DEFAULT 0,
+      published_at INTEGER,
+      created_at INTEGER DEFAULT (strftime('%s', 'now')),
+      FOREIGN KEY (novel_id) REFERENCES novels(id)
+    );`);
+
+    await db.run(sql`CREATE TABLE IF NOT EXISTS reviews (
+      id TEXT PRIMARY KEY NOT NULL,
+      user_id TEXT NOT NULL,
+      chapter_id TEXT NOT NULL,
+      rating INTEGER NOT NULL,
+      comment TEXT,
+      created_at INTEGER DEFAULT (strftime('%s', 'now')),
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (chapter_id) REFERENCES chapters(id)
+    );`);
+
+    // 2. Insert Sample Data (Check if exists first)
+    const existingNovel = await db.select().from(novels).limit(1).get();
+    if (!existingNovel) {
+       await db.run(sql`INSERT INTO novels (id, title, description, original_language, status, author) 
+       VALUES ('sample-1', 'The Silent Stars', 'A demo novel.', 'en', 'ongoing', 'Jane Doe');`);
+
+       await db.run(sql`INSERT INTO chapters (id, novel_id, title, content_original, content_translated, status, "order") 
+       VALUES ('chap-1', 'sample-1', 'Chapter 1', 'Hello World', 'မင်္ဂလာပါ', 'published', 1);`);
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Migration Error:", error);
+    return { success: false, error: error.message };
+  }
 }
+
