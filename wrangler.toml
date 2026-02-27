@@ -5,7 +5,7 @@ pages_build_output_dir = ".vercel/output/static"
 [[d1_databases]]
 binding = "DB"
 database_name = "atw-db"
-database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" # Replace with your D1 database ID in Cloudflare
+database_id = "6c3c472a-40ff-493d-b598-ff3c3664f4b3" # Replace with your D1 database ID in Cloudflare
 
 [[r2_buckets]]
 binding = "R2"
