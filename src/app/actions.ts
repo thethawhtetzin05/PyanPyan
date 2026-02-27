@@ -124,7 +124,14 @@ import { sql } from "drizzle-orm";
 // Manual Migration for Setup Page
 export async function runMigration() {
   try {
-    // 1. Create Tables (Simplified without strict Foreign Keys to avoid D1 setup issues)
+    // 0. Cleanup (Drop old tables to reset schema)
+    // We do this one by one to avoid dependency errors if FKs exist
+    await db.run(sql`DROP TABLE IF EXISTS reviews;`);
+    await db.run(sql`DROP TABLE IF EXISTS chapters;`);
+    await db.run(sql`DROP TABLE IF EXISTS users;`);
+    await db.run(sql`DROP TABLE IF EXISTS novels;`);
+
+    // 1. Create Tables (Simplified without strict Foreign Keys)
     await db.run(sql`CREATE TABLE IF NOT EXISTS novels (
       id TEXT PRIMARY KEY NOT NULL,
       title TEXT NOT NULL,
