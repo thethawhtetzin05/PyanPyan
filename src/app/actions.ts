@@ -124,7 +124,7 @@ import { sql } from "drizzle-orm";
 // Manual Migration for Setup Page
 export async function runMigration() {
   try {
-    // 1. Create Tables
+    // 1. Create Tables (Simplified without strict Foreign Keys to avoid D1 setup issues)
     await db.run(sql`CREATE TABLE IF NOT EXISTS novels (
       id TEXT PRIMARY KEY NOT NULL,
       title TEXT NOT NULL,
@@ -157,8 +157,7 @@ export async function runMigration() {
       order INTEGER NOT NULL,
       view_count INTEGER DEFAULT 0,
       published_at INTEGER,
-      created_at INTEGER DEFAULT (strftime('%s', 'now')),
-      FOREIGN KEY (novel_id) REFERENCES novels(id)
+      created_at INTEGER DEFAULT (strftime('%s', 'now'))
     );`);
 
     await db.run(sql`CREATE TABLE IF NOT EXISTS reviews (
@@ -167,9 +166,7 @@ export async function runMigration() {
       chapter_id TEXT NOT NULL,
       rating INTEGER NOT NULL,
       comment TEXT,
-      created_at INTEGER DEFAULT (strftime('%s', 'now')),
-      FOREIGN KEY (user_id) REFERENCES users(id),
-      FOREIGN KEY (chapter_id) REFERENCES chapters(id)
+      created_at INTEGER DEFAULT (strftime('%s', 'now'))
     );`);
 
     // 2. Insert Sample Data (Check if exists first)
