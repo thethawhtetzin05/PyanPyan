@@ -30,7 +30,7 @@ export const chapters = sqliteTable("chapters", {
   status: text("status", { 
     enum: ["pending", "ai_translated", "human_reviewing", "published", "verified_for_training"] 
   }).default("pending").notNull(),
-  order: integer("order").notNull(),
+  chapterOrder: integer("chapter_order").notNull(), // Renamed from 'order' to avoid SQL keyword conflict
   viewCount: integer("view_count").default(0), // Popularity metric
   publishedAt: integer("published_at", { mode: "timestamp" }),
   createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(strftime('%s', 'now'))`),

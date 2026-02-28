@@ -15,7 +15,7 @@ export default async function NovelPage({ params }: { params: Promise<{ novelId:
   const novelChapters = await db.select()
     .from(chapters)
     .where(eq(chapters.novelId, novelId))
-    .orderBy(asc(chapters.order))
+    .orderBy(asc(chapters.chapterOrder))
     .all();
 
   return (

@@ -18,15 +18,15 @@ export default async function ChapterPage({ params }: { params: Promise<{ chapte
   // Find Next/Prev Chapter Logic (Simple version based on order)
   const prevChapter = await db.select().from(chapters)
     .where(eq(chapters.novelId, chapter.novelId))
-    .where(lt(chapters.order, chapter.order))
-    .orderBy(desc(chapters.order))
+    .where(lt(chapters.chapterOrder, chapter.chapterOrder))
+    .orderBy(desc(chapters.chapterOrder))
     .limit(1)
     .get();
 
   const nextChapter = await db.select().from(chapters)
     .where(eq(chapters.novelId, chapter.novelId))
-    .where(gt(chapters.order, chapter.order))
-    .orderBy(asc(chapters.order))
+    .where(gt(chapters.chapterOrder, chapter.chapterOrder))
+    .orderBy(asc(chapters.chapterOrder))
     .limit(1)
     .get();
 

@@ -161,7 +161,7 @@ export async function runMigration() {
       content_translated TEXT,
       content_edited TEXT,
       status TEXT DEFAULT 'pending' NOT NULL,
-      order INTEGER NOT NULL,
+      chapter_order INTEGER NOT NULL,
       view_count INTEGER DEFAULT 0,
       published_at INTEGER,
       created_at INTEGER DEFAULT (strftime('%s', 'now'))
@@ -182,7 +182,7 @@ export async function runMigration() {
        await db.run(sql`INSERT INTO novels (id, title, description, original_language, status, author) 
        VALUES ('sample-1', 'The Silent Stars', 'A demo novel.', 'en', 'ongoing', 'Jane Doe');`);
 
-       await db.run(sql`INSERT INTO chapters (id, novel_id, title, content_original, content_translated, status, "order") 
+       await db.run(sql`INSERT INTO chapters (id, novel_id, title, content_original, content_translated, status, chapter_order) 
        VALUES ('chap-1', 'sample-1', 'Chapter 1', 'Hello World', 'မင်္ဂလာပါ', 'published', 1);`);
     }
 
